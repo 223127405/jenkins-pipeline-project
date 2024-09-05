@@ -46,16 +46,14 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            emailext (
-                to: 'aryanarora235rja@gmail.com',
-                subject: 'Pipeline Status: ${currentBuild.currentResult}',
-                body: '''The Jenkins pipeline has completed.
-                Build Result: ${currentBuild.currentResult}.
-                Check logs for more details.''',
-                attachLog: true
-            )
-        }
+   post {
+    always {
+        emailext (
+            to: 'aryanarora235rja@gmail.com',
+            subject: 'Jenkins Pipeline: ${currentBuild.currentResult}',
+            body: '''The Jenkins pipeline has completed. Check logs for more details.''',
+            attachLog: true
+        )
     }
 }
+
