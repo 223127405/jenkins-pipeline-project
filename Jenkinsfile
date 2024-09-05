@@ -1,60 +1,59 @@
 pipeline {
     agent any
-    environment {
-        REPO_URL = 'https://github.com/223127405/jenkins-pipeline-project.git'
-        STAGING_SERVER = 'AWS-EC2-Staging'
-        PRODUCTION_SERVER = 'AWS-EC2-Production'
-    }
+
     stages {
         stage('Build') {
             steps {
-                echo "Starting the Build: Fetching code from ${env.REPO_URL}"
-                echo "Building the code using Maven... (this is a simulated build step)"
+                echo "Fetching the source code from the directory path specified by the environment variable."
+                echo "Compiling the code and generating any necessary artifacts."
             }
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo "Running Unit Tests using JUnit."
-                echo "Running Integration Tests using Selenium."
+                echo "Running unit tests."
+                echo "Running integration tests."
             }
         }
+
         stage('Code Analysis') {
             steps {
-                echo "Performing Code Analysis with SonarQube."
-                echo "Checking code quality and standards."
+                echo "Checking the quality of the code using a code analysis tool."
             }
         }
+
         stage('Security Scan') {
             steps {
-                echo "Initiating Security Scan with OWASP Dependency Check."
-                echo "Scanning for vulnerabilities."
+                echo "Identifying vulnerabilities using a security scanning tool."
             }
         }
-        stage('Deploy to Staging') {
-            steps {
-                echo "Deploying the application to the staging environment: ${env.STAGING_SERVER}."
-            }
-        }
+
         stage('Integration Tests on Staging') {
             steps {
-                echo "Running Integration Tests on the Staging Environment."
+                echo "Running integration tests on the staging environment."
             }
         }
+
         stage('Deploy to Production') {
             steps {
-                echo "Deploying the application to the production environment: ${env.PRODUCTION_SERVER}."
+                echo "Deploying the code to the production environment."
             }
         }
     }
+
     post {
-        always {
-            emailext (
-                to: 'aryanarora235rja@gmail.com',
-                subject: 'Jenkins Pipeline Build Notification',
-                body: '''The Jenkins pipeline has completed successfully.
-                Please log into Jenkins to review the build details and logs.''',
-                attachLog: false  // Disable log attachment to prevent large file issues
-            )
+        success {
+            emailext attachLog: true,
+            compressLog: true,
+            to: 'aryanarora235rja@gmail.com',
+            body: "log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastSuccessfulBuild/log",
+            subject: "Production Deployment is Successful - Jenkins"
+        }
+        failure {  
+            emailext attachLog: true,
+            compressLog: true,
+            to: 'aryanarora235rja@gmail.com',
+            body: "log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastSuccessfulBuild/log",
+            subject: "Production Deployment is Failed - Jenkins"
         }
     }
 }
