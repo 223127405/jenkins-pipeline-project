@@ -5,6 +5,7 @@ pipeline {
         STAGING_SERVER = 'AWS-EC2-Staging'
         PRODUCTION_SERVER = 'AWS-EC2-Production'
     }
+    
     stages {
         stage('Build') {
             steps {
