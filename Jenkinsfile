@@ -47,13 +47,20 @@ pipeline {
         }
     }
     post {
-        always {
-            emailext (
-                to: 'aryanarora235rja@gmail.com',
-                subject: 'Jenkins Pipeline Build',
-                body: 'The Jenkins pipeline has completed successfully. Check the attached logs for details.',
-                attachLog: true
-            )
-        }
+    success {
+        emailext (
+            to: 'aryanarora235rja@gmail.com',
+            subject: 'Jenkins Pipeline Build Success',
+            body: 'The Jenkins pipeline has completed successfully.'
+        )
     }
+    failure {
+        emailext (
+            to: 'aryanarora235rja@gmail.com',
+            subject: 'Jenkins Pipeline Build Failed',
+            body: 'The Jenkins pipeline failed. Please check the logs for details.'
+        )
+    }
+}
+ 
 }
