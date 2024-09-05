@@ -49,7 +49,7 @@ pipeline {
     post {
         always {
             emailext (
-                to: 'developer@example.com',
+                to: 'aryanarora235rja@gmail.com',
                 subject: 'Pipeline Status: ${currentBuild.currentResult}',
                 body: '''The Jenkins pipeline has completed.
                 Build Result: ${currentBuild.currentResult}
