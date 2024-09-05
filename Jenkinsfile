@@ -52,13 +52,8 @@ pipeline {
                 to: 'aryanarora235rja@gmail.com',
                 subject: 'Pipeline Status: ${currentBuild.currentResult}',
                 body: '''The Jenkins pipeline has completed.
-                Build Result: ${currentBuild.currentResult}
-                Logs attached.
-
-                - Build Stage: ${currentBuild.rawBuild.getAction(hudson.model.ResultAction)?.getResult() ?: "N/A"}
-                - Test Stage: ${currentBuild.rawBuild.getAction(hudson.tasks.junit.TestResultAction)?.getResult() ?: "N/A"}
-                - Code Analysis: Code analysis completed.
-                ''',
+                Build Result: ${currentBuild.currentResult}.
+                Check logs for more details.''',
                 attachLog: true
             )
         }
