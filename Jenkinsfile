@@ -17,14 +17,14 @@ pipeline {
                 success {
                     emailext attachLog: true,
                     compressLog: true,
-                    to: 'aryanarora235rja@gmail.com',
+                    to: 's22327405@deakin.edu.au',
                     body: "Unit and Integration Tests were successful. Log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastSuccessfulBuild/log",
                     subject: "Unit and Integration Tests Successful - Jenkins"
                 }
                 failure {
                     emailext attachLog: true,
                     compressLog: true,
-                    to: 'aryanarora235rja@gmail.com',
+                    to: 's22327405@deakin.edu.au',
                     body: "Unit and Integration Tests failed. Log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastFailedBuild/log",
                     subject: "Unit and Integration Tests Failed - Jenkins"
                 }
@@ -45,14 +45,14 @@ pipeline {
                 success {
                     emailext attachLog: true,
                     compressLog: true,
-                    to: 'aryanarora235rja@gmail.com',
+                    to: 's22327405@deakin.edu.au',
                     body: "Security Scan was successful. Log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastSuccessfulBuild/log",
                     subject: "Security Scan Successful - Jenkins"
                 }
                 failure {
                     emailext attachLog: true,
                     compressLog: true,
-                    to: 'aryanarora235rja@gmail.com',
+                    to: 's22327405@deakin.edu.au',
                     body: "Security Scan failed. Log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastFailedBuild/log",
                     subject: "Security Scan Failed - Jenkins"
                 }
