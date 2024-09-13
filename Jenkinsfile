@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-
-
-
-
     stages {
         stage('Build') {
             steps {
@@ -12,10 +8,25 @@ pipeline {
                 echo "Compiling the code and generating any necessary artifacts."
             }
         }
+
         stage('Unit and Integration Tests') {
             steps {
                 echo "Running unit tests."
                 echo "Running integration tests."
+            }
+            post {
+                success {
+                    emailext attachLog: true,
+                    to: 'aryanarora235rja@gmail.com',
+                    subject: "Unit and Integration Tests Successful",
+                    body: "Unit and Integration tests completed successfully. Please check the attached log for details."
+                }
+                failure {
+                    emailext attachLog: true,
+                    to: 'aryanarora235rja@gmail.com',
+                    subject: "Unit and Integration Tests Failed",
+                    body: "Unit and Integration tests failed. Please check the attached log for details."
+                }
             }
         }
 
@@ -28,6 +39,20 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo "Identifying vulnerabilities using a security scanning tool."
+            }
+            post {
+                success {
+                    emailext attachLog: true,
+                    to: 'aryanarora235rja@gmail.com',
+                    subject: "Security Scan Successful",
+                    body: "Security scan completed successfully. Please check the attached log for details."
+                }
+                failure {
+                    emailext attachLog: true,
+                    to: 'aryanarora235rja@gmail.com',
+                    subject: "Security Scan Failed",
+                    body: "Security scan failed. Please check the attached log for details."
+                }
             }
         }
 
@@ -47,17 +72,15 @@ pipeline {
     post {
         success {
             emailext attachLog: true,
-            compressLog: true,
             to: 'aryanarora235rja@gmail.com',
-            body: "log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastSuccessfulBuild/log",
-            subject: "Production Deployment is Successful - Jenkins"
+            subject: "Pipeline Successful - Jenkins",
+            body: "The Jenkins pipeline completed successfully. Please check the attached log for details."
         }
-        failure {  
+        failure {
             emailext attachLog: true,
-            compressLog: true,
             to: 'aryanarora235rja@gmail.com',
-            body: "log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastSuccessfulBuild/log",
-            subject: "Production Deployment is Failed - Jenkins"
+            subject: "Pipeline Failed - Jenkins",
+            body: "The Jenkins pipeline failed. Please check the attached log for details."
         }
     }
 }
