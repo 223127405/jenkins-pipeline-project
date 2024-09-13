@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+
+
+
+
     stages {
         stage('Build') {
             steps {
@@ -8,29 +12,10 @@ pipeline {
                 echo "Compiling the code and generating any necessary artifacts."
             }
         }
-
         stage('Unit and Integration Tests') {
             steps {
                 echo "Running unit tests."
                 echo "Running integration tests."
-            }
-            post {
-                success {
-                    emailext (
-                        attachLog: false,
-                        to: 'aryanarora235rja@gmail.com',
-                        subject: "Unit and Integration Tests Successful - Jenkins",
-                        body: "The Unit and Integration Tests were successful. Check logs for more details."
-                    )
-                }
-                failure {
-                    emailext (
-                        attachLog: true,
-                        to: 'aryanarora235rja@gmail.com',
-                        subject: "Unit and Integration Tests Failed - Jenkins",
-                        body: "The Unit and Integration Tests failed. Check logs for more details."
-                    )
-                }
             }
         }
 
@@ -43,24 +28,6 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo "Identifying vulnerabilities using a security scanning tool."
-            }
-            post {
-                success {
-                    emailext (
-                        attachLog: false,
-                        to: 'aryanarora235rja@gmail.com',
-                        subject: "Security Scan Successful - Jenkins",
-                        body: "The Security Scan was successful. Check logs for more details."
-                    )
-                }
-                failure {
-                    emailext (
-                        attachLog: true,
-                        to: 'aryanarora235rja@gmail.com',
-                        subject: "Security Scan Failed - Jenkins",
-                        body: "The Security Scan failed. Check logs for more details."
-                    )
-                }
             }
         }
 
@@ -79,10 +46,18 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully.'
+            emailext attachLog: true,
+            compressLog: true,
+            to: 'aryanarora235rja@gmail.com',
+            body: "log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastSuccessfulBuild/log",
+            subject: "Production Deployment is Successful - Jenkins"
         }
-        failure {
-            echo 'Pipeline failed.'
+        failure {  
+            emailext attachLog: true,
+            compressLog: true,
+            to: 'aryanarora235rja@gmail.com',
+            body: "log is available at $JENKINS_HOME/jobs/$JOB_NAME/builds/lastSuccessfulBuild/log",
+            subject: "Production Deployment is Failed - Jenkins"
         }
     }
 }
