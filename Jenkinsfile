@@ -41,29 +41,16 @@ pipeline {
     }
 
     post {
-        success {
-            emailext to: 'aryanarora235rja@gmail.com',
-                     subject: "Build SUCCESS - $JOB_NAME Build #$BUILD_NUMBER",
-                     body: """Project: $JOB_NAME
-                              Build Number: $BUILD_NUMBER
-                              Status: SUCCESS
-                              Timestamp: ${new Date()}
-                              Logs: $BUILD_URL/console
-
-                              This build completed successfully.
-                           """
-        }
-        failure {  
-            emailext to: 'aryanarora235rja@gmail.com',
-                     subject: "Build FAILURE - $JOB_NAME Build #$BUILD_NUMBER",
-                     body: """Project: $JOB_NAME
-                              Build Number: $BUILD_NUMBER
-                              Status: FAILURE
-                              Timestamp: ${new Date()}
-                              Logs: $BUILD_URL/console
-
-                              The build failed. Please review the logs for further details.
-                           """
+        always {
+            emailext (
+                to: 'aryanarora235rja@gmail.com',
+                subject: "Build Notification: ${currentBuild.currentResult} - $JOB_NAME #$BUILD_NUMBER",
+                body: """Build Status: ${currentBuild.currentResult}
+                         Project: $JOB_NAME
+                         Build Number: $BUILD_NUMBER
+                         Build URL: $BUILD_URL
+                         This email is to notify you that the build process has completed."""
+            )
         }
     }
 }
