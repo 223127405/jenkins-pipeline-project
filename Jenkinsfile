@@ -1,56 +1,68 @@
 pipeline {
     agent any
-
+    environment {
+        TESTING_ENVIROMENT = '6.2C pipeline'
+        PRODUCTION_ENVIROMENT = 'Aryan Arora'
+        RECIPIENT_EMAIL = 'aryanarora235rja@gmail.com'  // Updated email for notifications
+    }
     stages {
         stage('Build') {
             steps {
-                echo "Fetching the source code from the directory path specified by the environment variable."
-                echo "Compiling the code and generating any necessary artifacts."
+                sleep(3)
+                echo "Building code using Maven..."
             }
         }
-        stage('Unit and Integration Tests') {
+        stage('Test') {
             steps {
-                echo "Running unit tests."
-                echo "Running integration tests."
+                echo "Running Unit tests and integration from TestNG..."
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: '**/test_logs.txt', allowEmptyArchive: true
+                    script {
+                        mail to: "${env.RECIPIENT_EMAIL}",
+                            subject: "Test Stage ${currentBuild.result}: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
+                            body: "The Test stage has ${currentBuild.result}. Please check the logs attached.",
+                            attachments: 'test_logs.txt'
+                    }
+                }
             }
         }
-
         stage('Code Analysis') {
             steps {
-                echo "Checking the quality of the code using a code analysis tool."
+                echo "Performing Code analysis using SonarQube..."
             }
         }
-
         stage('Security Scan') {
             steps {
-                echo "Identifying vulnerabilities using a security scanning tool."
+                echo "Performing Security Scan using OWASP..."
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: '**/security_scan_logs.txt', allowEmptyArchive: true
+                    script {
+                        mail to: "${env.RECIPIENT_EMAIL}",
+                            subject: "Security Scan Stage ${currentBuild.result}: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
+                            body: "The Security Scan stage has ${currentBuild.result}. Please check the logs attached.",
+                            attachments: 'security_scan_logs.txt'
+                    }
+                }
             }
         }
-
-        stage('Integration Tests on Staging') {
+        stage('Deploy to Staging') {
             steps {
-                echo "Running integration tests on the staging environment."
+                echo "Deploying to staging in AWS CLI..."
             }
         }
-
-        stage('Deploy to Production') {
+        stage('Integration tests on staging') {
             steps {
-                echo "Deploying the code to the production environment."
+                echo 'Running integration tests on staging with Selenium...'
             }
         }
     }
-
     post {
         always {
-            emailext (
-                to: 'aryanarora235rja@gmail.com',
-                subject: "Build Notification: ${currentBuild.currentResult} - $JOB_NAME #$BUILD_NUMBER",
-                body: """Build Status: ${currentBuild.currentResult}
-                         Project: $JOB_NAME
-                         Build Number: $BUILD_NUMBER
-                         Build URL: $BUILD_URL
-                         This email is to notify you that the build process has completed."""
-            )
+            echo "Pipeline completed."
         }
     }
 }
